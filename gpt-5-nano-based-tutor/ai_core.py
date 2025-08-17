@@ -103,15 +103,15 @@ class AICore(ABC, Generic[TAiResponse]):
 		Returns:
 			Processed AI response.
 		"""
-		call_configuration: dict = self.form_call_configuration(request)
+		call_configuration: dict = self._form_call_configuration(request)
 		response: Response = self._ai_api.responses.create(
 			**call_configuration
 		)
 		self.history_manager.last_assistant_response_id = response.id
-		return self.process_response(response)
+		return self._process_response(response)
 
 	@abstractmethod
-	def form_call_configuration(self, request: str) -> dict:
+	def _form_call_configuration(self, request: str) -> dict[str, Any]:
 		"""Build the call configuration dict for the API call.
 
 		Parameters:
@@ -131,7 +131,7 @@ class AICore(ABC, Generic[TAiResponse]):
 
 
 	@abstractmethod
-	def process_response(self, response: Response) -> TAiResponse:
+	def _process_response(self, response: Response) -> TAiResponse:
 		"""Convert the model Response into TAiResponse.
 
 		Parameters:

@@ -35,6 +35,16 @@ class AIBrochureConfig:
         except ValueError:
             raise ValueError(f"Environment variable '{key}' must be an integer")
 
+    def _get_float(self, key: str) -> float:
+        """
+        Get a float value from the environment variables.
+        """
+        value = self.__get_config_value(key)
+        try:
+            return float(value)
+        except ValueError:
+            raise ValueError(f"Environment variable '{key}' must be a float")
+
     @property
     def openai_api_key(self) -> str:
         """
@@ -43,6 +53,15 @@ class AIBrochureConfig:
         if self.__openai_api_key == "":
             self.__openai_api_key = self._get_str("OPENAI_API_KEY")
         return self.__openai_api_key
+
+    @property
+    def temperature(self) -> float:
+        """
+        Get the temperature setting from the environment variables.
+        """
+        if self.__temperature == 0.0:
+            self.__temperature = self._get_float("temperature")
+        return self.__temperature
 
     @property
     def model_name(self) -> str:
@@ -57,3 +76,4 @@ class AIBrochureConfig:
         load_dotenv(dotenv_path=".env")
         self.__openai_api_key: str = ""
         self.__model_name: str = ""
+        self.__temperature: float = 0.0
