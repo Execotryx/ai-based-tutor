@@ -14,20 +14,21 @@ class AISelfReference(AICore[str]):
 
     def infer_area_of_knowledge(self, user_question: str) -> str:
         prompt: str = (f"User question: {user_question}\n"
-                       f"Based on the question, the area of knowledge is:")
+                       "Based on the question, infer the area of knowledge.\n"
+                       "Respond with the inferred area of knowledge and nothing else.")
         area_of_knowledge: str = self.ask(prompt)
         return area_of_knowledge
 
     def clarify_tutor_role(self, area_of_knowledge: str, previous_system_behavior: str) -> str:
         prompt: str = (f"Area of knowledge: {area_of_knowledge}\n"
                        f"Previous tutor's role: {previous_system_behavior}\n"
-                       f"Based on the area of knowledge and previous behavior, correct the tutor's role to reflect that tutor is an expert in the provided area of knowledge.")
+                       "Based on the area of knowledge and previous behavior, correct the tutor's role to reflect that tutor is an expert in the provided area of knowledge.\n"
+                       "Respond ONLY with the corrected tutor's role, nothing else.")
         clarified_tutor_role: str = self.ask(prompt)
         return clarified_tutor_role
 
     def _form_call_configuration(self, request: str) -> dict[str, Any]:
         basic_call_configuration: dict[str, Any] = super()._form_call_configuration(request)
-        basic_call_configuration["temperature"] = 0.2
         basic_call_configuration["reasoning"] = {"effort": "medium"}
         return basic_call_configuration
 

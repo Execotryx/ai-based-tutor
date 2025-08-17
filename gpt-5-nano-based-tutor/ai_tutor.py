@@ -29,7 +29,6 @@ class AITutor(AICore[str]):
 
     def _form_call_configuration(self, request: str) -> dict[str, Any]:
         basic_call_configuration: dict[str, Any] = super()._form_call_configuration(request)
-        basic_call_configuration["temperature"] = self.config.temperature
         if self._clarified_system_behavior:
             basic_call_configuration["instructions"] = self._clarified_system_behavior
 
@@ -44,3 +43,12 @@ class AITutor(AICore[str]):
             self.__clarified_system_behavior = self._self_reference.clarify_tutor_role(inferred_area_of_knowledge, self.history_manager.system_behavior)
         response: str = self.ask(user_question)
         return response
+
+if __name__ == "__main__":
+    # Example usage
+    config = AIBrochureConfig()
+    tutor = AITutor(config)
+    
+    user_question = "Can you explain the concept of recursion in programming?"
+    response = tutor.explain_this(user_question)
+    print(response)  # Outputs the explanation provided by the AI tutor

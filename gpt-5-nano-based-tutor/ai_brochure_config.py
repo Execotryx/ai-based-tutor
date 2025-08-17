@@ -73,7 +73,7 @@ class AIBrochureConfig:
         return self.__model_name
 
     def __init__(self) -> None:
-        load_dotenv(dotenv_path=".env")
+        load_dotenv()
         self.__openai_api_key: str = ""
         self.__model_name: str = ""
         self.__temperature: float = 0.0
