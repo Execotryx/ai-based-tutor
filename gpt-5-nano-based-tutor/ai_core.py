@@ -1,6 +1,6 @@
 import openai
 from abc import ABC, abstractmethod
-from ai_brochure_config import AIBrochureConfig
+from ai_config import AIConfig
 from typing import Any, Generic, TypeVar
 from openai.types.responses import Response
 
@@ -42,19 +42,19 @@ class HistoryManager:
 class AICore(ABC, Generic[TAiResponse]):
 	"""Base class for AI calls and history handling."""
 	@property
-	def config(self) -> AIBrochureConfig:
+	def config(self) -> AIConfig:
 		"""Get the current AIBrochureConfig."""
 		return self.__config
 
 	@config.setter
-	def config(self, config: AIBrochureConfig | None) -> None:
+	def config(self, config: AIConfig | None) -> None:
 		"""Set configuration, or reset to default if None.
 
 		Parameters:
 			config: New AIBrochureConfig, or None to reset to default.
 		"""
 		if config is None:
-			self.__config = AIBrochureConfig()
+			self.__config = AIConfig()
 		else:
 			self.__config = config
 
@@ -76,7 +76,7 @@ class AICore(ABC, Generic[TAiResponse]):
 		"""Return the HistoryManager instance."""
 		return self.__history_manager
 
-	def __init__(self, config: AIBrochureConfig, system_behavior: str) -> None:
+	def __init__(self, config: AIConfig, system_behavior: str) -> None:
 		"""Initialize with config and system behavior.
 
 		Parameters:
@@ -84,7 +84,7 @@ class AICore(ABC, Generic[TAiResponse]):
 			system_behavior: System behavior string (instructions).
 		"""
 		# Initialize all instance-level attributes here
-		self.__config: AIBrochureConfig = config
+		self.__config: AIConfig = config
 		self.__history_manager: HistoryManager = HistoryManager(system_behavior)
 		self.__ai_api: openai.OpenAI | None = None
 

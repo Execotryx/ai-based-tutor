@@ -1,6 +1,6 @@
 """AISelfReference: helper AICore subclass that infers knowledge areas and refines tutor role."""
 from ai_core import AICore
-from ai_brochure_config import AIBrochureConfig
+from ai_config import AIConfig
 from openai.types.responses import Response
 from typing import Any
 
@@ -11,7 +11,7 @@ class AISelfReference(AICore[str]):
 		config: AIBrochureConfig used to configure the underlying AICore.
 	"""
 
-	def __init__(self, config: AIBrochureConfig) -> None:
+	def __init__(self, config: AIConfig) -> None:
 		"""Initialize with a compact system behavior for self-reference.
 
 		Parameters:

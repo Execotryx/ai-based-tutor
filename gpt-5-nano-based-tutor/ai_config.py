@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 
-class AIBrochureConfig:
+class AIConfig:
     """
     Configuration class to load environment variables.
     """
@@ -55,15 +55,6 @@ class AIBrochureConfig:
         return self.__openai_api_key
 
     @property
-    def temperature(self) -> float:
-        """
-        Get the temperature setting from the environment variables.
-        """
-        if self.__temperature == 0.0:
-            self.__temperature = self._get_float("temperature")
-        return self.__temperature
-
-    @property
     def model_name(self) -> str:
         """
         Get the model name from the environment variables.
@@ -76,4 +67,3 @@ class AIBrochureConfig:
         load_dotenv()
         self.__openai_api_key: str = ""
         self.__model_name: str = ""
-        self.__temperature: float = 0.0

@@ -2,7 +2,7 @@
 
 from openai.types.responses import Response
 from ai_core import AICore
-from ai_brochure_config import AIBrochureConfig
+from ai_config import AIConfig
 from ai_self_reference import AISelfReference
 from typing import Any
 
@@ -23,7 +23,7 @@ class AITutor(AICore[str]):
 		"""AISelfReference instance used to infer and refine tutor role."""
 		return self.__self_reference
 
-	def __init__(self, config: AIBrochureConfig) -> None:
+	def __init__(self, config: AIConfig) -> None:
 		"""Create an AITutor with a base tutor system behavior.
 
 		Parameters:
@@ -79,7 +79,7 @@ class AITutor(AICore[str]):
 
 if __name__ == "__main__":
     # Example usage
-    config = AIBrochureConfig()
+    config = AIConfig()
     tutor = AITutor(config)
     
     user_question = "Can you explain the concept of recursion in programming?"
