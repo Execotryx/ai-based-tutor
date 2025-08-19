@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 
-class AIBrochureConfig:
+class AIConfig:
     """
     Configuration class to load environment variables.
     """
@@ -35,6 +35,16 @@ class AIBrochureConfig:
         except ValueError:
             raise ValueError(f"Environment variable '{key}' must be an integer")
 
+    def _get_float(self, key: str) -> float:
+        """
+        Get a float value from the environment variables.
+        """
+        value = self.__get_config_value(key)
+        try:
+            return float(value)
+        except ValueError:
+            raise ValueError(f"Environment variable '{key}' must be a float")
+
     @property
     def openai_api_key(self) -> str:
         """
@@ -54,6 +64,6 @@ class AIBrochureConfig:
         return self.__model_name
 
     def __init__(self) -> None:
-        load_dotenv(dotenv_path=".env")
+        load_dotenv()
         self.__openai_api_key: str = ""
         self.__model_name: str = ""
