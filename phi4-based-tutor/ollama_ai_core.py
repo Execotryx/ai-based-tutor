@@ -1,4 +1,4 @@
-from ollama import chat, ChatResponse
+from ollama import chat, ChatResponse, Message
 from ollama_ai_config import OllamaAIConfig
 from abc import ABC, abstractmethod
 from typing import Any, Generic, TypeVar
@@ -15,9 +15,9 @@ class HistoryManager:
         return self.__system_behavior
 
     @property
-    def chat_history(self) -> list[dict[str, str]]:
+    def chat_history(self) -> list[Message]:
         """Chat history for the conversation."""
-        if not self.__chat_history[0].get("role") == "system":
+        if not self.__chat_history[0].role == "system":
             self.__chat_history.insert(0, self.__create_message_with_role("system", self.system_behavior))
         return self.__chat_history
 
@@ -32,7 +32,7 @@ class HistoryManager:
             system_behavior: System instruction string.
         """
         self.__system_behavior: str = system_behavior
-        self.__chat_history: list[dict[str, str]] = []
+        self.__chat_history: list[Message] = []
         self.__config: OllamaAIConfig = config
 
     def add_user_message(self, message: str) -> None:
@@ -43,7 +43,30 @@ class HistoryManager:
         """Add an assistant message to the chat history."""
         self.__chat_history.append(self.__create_message_with_role("assistant", message))
 
-    def __create_message_with_role(self, role: str, content: str) -> dict[str, str]:
+    def __create_message_with_role(self, role: str, content: str) -> Message:
         """Create a message with the given role and content."""
-        return {"role": role, "content": content}
+        return Message(role=role, content=content)
 
+
+class AICore(ABC, Generic[TAiResponse]):
+
+    @property
+    def _config(self) -> OllamaAIConfig:
+        return self.__config
+
+    @property
+    def _history_manager(self) -> HistoryManager:
+        return self.__history_manager
+
+    def __init__(self, system_behavior: str) -> None:
+        self.__config: OllamaAIConfig = OllamaAIConfig()
+        self.__history_manager: HistoryManager = HistoryManager(system_behavior, self._config)
+
+    def ask(self, request: str) -> TAiResponse:
+        self._history_manager.add_user_message(request)
+        response: ChatResponse = chat(model=self._config.model_id, messages=self._history_manager.chat_history)
+        return self._process_response(response)
+
+    @abstractmethod
+    def _process_response(self, response: ChatResponse) -> TAiResponse:
+        pass
