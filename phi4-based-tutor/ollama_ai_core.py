@@ -58,13 +58,16 @@ class AICore(ABC, Generic[TAiResponse]):
     def _history_manager(self) -> HistoryManager:
         return self.__history_manager
 
-    def __init__(self, system_behavior: str) -> None:
-        self.__config: OllamaAIConfig = OllamaAIConfig()
+    def __init__(self, system_behavior: str, config: OllamaAIConfig) -> None:
+        self.__config: OllamaAIConfig = config
         self.__history_manager: HistoryManager = HistoryManager(system_behavior, self._config)
 
     def ask(self, request: str) -> TAiResponse:
         self._history_manager.add_user_message(request)
         response: ChatResponse = chat(model=self._config.model_id, messages=self._history_manager.chat_history)
+        self._history_manager.add_assistant_message(
+            response.message.content if response.message.content else "No response was received."
+        )
         return self._process_response(response)
 
     @abstractmethod
