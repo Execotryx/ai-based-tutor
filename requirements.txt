@@ -3,3 +3,4 @@ openai
 bs4
 requests
 rich
+ollama
